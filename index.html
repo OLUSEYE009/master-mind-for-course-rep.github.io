@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuga Moses (Mastermind MM) for Course Rep | 100lvl Economics</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #2c3e50;
+            --secondary: #e74c3c;
+            --accent: #3498db;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --trust: #27ae60;
+        }
+
+        body {
+            overflow-x: hidden;
+            background-color: var(--light);
+            color: var(--dark);
+        }
+
+        /* Header Styles */
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-img {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--accent), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo-img::before {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 4px;
+            background-color: white;
+            transform: rotate(45deg);
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+        }
+
+        nav a:hover {
+            color: var(--accent);
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .mobile-menu {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            text-align: center;
+            padding: 0 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .hero-image {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid white;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            animation: fadeInUp 1s ease;
+        }
+
+        .hero h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--light);
+            animation: fadeInUp 1s ease 0.2s both;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease 0.4s both;
+        }
+
+        .hero-btns {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            animation: fadeInUp 1s ease 0.6s both;
+            margin-bottom: 10px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #c0392b;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-secondary:hover {
+            background-color: white;
+            color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Split Screen Section */
+        .split-screen {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .left-panel, .right-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 4rem 2rem;
+            transition: all 0.8s ease;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .left-panel {
+            background-color: var(--light);
+            color: var(--dark);
+        }
+
+        .right-panel {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+        }
+
+        .panel-content {
+            max-width: 500px;
+            text-align: center;
+            z-index: 2;
+        }
+
+        .panel-icon {
+            font-size: 4rem;
+            margin-bottom: 2rem;
+            color: var(--trust);
+        }
+
+        .trust-badge {
+            display: inline-block;
+            background-color: var(--trust);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .panel-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .panel-content p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .promise-list {
+            text-align: left;
+            margin: 2rem 0;
+        }
+
+        .promise-list li {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .promise-list i {
+            color: var(--trust);
+            margin-right: 10px;
+            margin-top: 5px;
+            flex-shrink: 0;
+        }
+
+        /* Support Section */
+        .support-section {
+            padding: 5rem 2rem;
+            background-color: white;
+        }
+
+        .section-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .section-title p {
+            font-size: 1.2rem;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .support-content {
+            display: flex;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .contact-info {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .contact-list {
+            list-style: none;
+            margin-top: 2rem;
+        }
+
+        .contact-list li {
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .contact-list i {
+            width: 40px;
+            height: 40px;
+            background-color: var(--accent);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .support-form {
+            flex: 1;
+            min-width: 300px;
+            background-color: var(--light);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, textarea:focus {
+            border-color: var(--accent);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+
+        textarea {
+            height: 120px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: #c0392b;
+        }
+
+        .confirmation {
+            display: none;
+            background-color: #2ecc71;
+            color: white;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-top: 1rem;
+            text-align: center;
+            animation: fadeIn 0.5s ease;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--primary);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .footer-content p {
+            margin-bottom: 1rem;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .social-links a {
+            color: white;
+            font-size: 1.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--accent);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 900px) {
+            .split-screen {
+                flex-direction: column;
+            }
+            
+            .left-panel, .right-panel {
+                padding: 3rem 1.5rem;
+                min-height: 100vh;
+            }
+
+            .hero {
+                height: auto;
+                min-height: 100vh;
+                padding: 6rem 1.5rem 3rem;
+            }
+
+            .hero-image {
+                width: 180px;
+                height: 180px;
+                margin-bottom: 1.5rem;
+            }
+
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .hero h2 {
+                font-size: 1.4rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .hero-btns {
+                flex-direction: column;
+                align-items: center;
+                width: 100%;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 300px;
+                text-align: center;
+            }
+
+            nav ul {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background-color: var(--primary);
+                flex-direction: column;
+                padding: 1rem 0;
+                text-align: center;
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            }
+
+            nav ul.show {
+                display: flex;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            .manifesto-link {
+                display: block;
+            }
+
+            .panel-content h2 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-image {
+                width: 150px;
+                height: 150px;
+            }
+
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .hero h2 {
+                font-size: 1.2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+        }
+
+        @media (min-width: 901px) {
+            .manifesto-link {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <div class="logo-img">MM</div>
+                <h1>Nuga Moses</h1>
+            </div>
+            <nav>
+                <ul id="navMenu">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#manifesto" class="manifesto-link">Manifesto</a></li>
+                    <li><a href="#support">Support Me</a></li>
+                </ul>
+                <div class="mobile-menu" id="mobileMenu">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <img src="Moses.jpg" alt="Nuga Moses" class="hero-image">
+            <h1>Nuga Moses <span>(Mastermind MM)</span></h1>
+            <h2>For 100lvl Economics Course Representative</h2>
+            <p>Your trusted voice for transparent leadership, faster information delivery, and zero course rep fees.</p>
+            <div class="hero-btns">
+                <a href="#manifesto" class="btn btn-primary">View My Manifesto</a>
+                <a href="#support" class="btn btn-secondary">Support My Campaign</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Split Screen Manifesto Section -->
+    <section class="split-screen" id="manifesto">
+        <div class="left-panel">
+            <div class="panel-content">
+                <div class="trust-badge">TRUSTWORTHY LEADERSHIP</div>
+                <i class="fas fa-handshake panel-icon"></i>
+                <h2>My Commitment to You</h2>
+                <p>I believe in transparent, accountable leadership that puts students first. Here's my promise:</p>
+                
+                <ul class="promise-list">
+                    <li><i class="fas fa-shield-alt"></i> <strong>Zero Course Rep Fees:</strong> I will never ask for money or collect any fees as course representative.</li>
+                    <li><i class="fas fa-bullhorn"></i> <strong>Transparent Communication:</strong> Regular updates on class matters with complete transparency.</li>
+                    <li><i class="fas fa-user-check"></i> <strong>Accountability:</strong> I will be answerable to all students and address concerns promptly.</li>
+                    <li><i class="fas fa-balance-scale"></i> <strong>Fair Representation:</strong> Every student's voice matters, regardless of background or affiliation.</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="right-panel">
+            <div class="panel-content">
+                <div class="trust-badge">SUPPORTIVE APPROACH</div>
+                <i class="fas fa-hands-helping panel-icon"></i>
+                <h2>How I'll Support You</h2>
+                <p>My focus is on creating an environment where every student can thrive academically and socially.</p>
+                
+                <ul class="promise-list">
+                    <li><i class="fas fa-bolt"></i> <strong>Lightning-Fast Information:</strong> Delivering class updates faster than ever before.</li>
+                    <li><i class="fas fa-graduation-cap"></i> <strong>Academic Support:</strong> Facilitating study groups and resource sharing.</li>
+                    <li><i class="fas fa-comments"></i> <strong>Open Communication:</strong> Always available to listen and address your concerns.</li>
+                    <li><i class="fas fa-users"></i> <strong>Community Building:</strong> Creating an inclusive environment for all economics students.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Support Section -->
+    <section class="support-section" id="support">
+        <div class="section-container">
+            <div class="section-title">
+                <h2>Support My Campaign</h2>
+                <p>Join me in creating a better academic experience for all 100lvl Economics students</p>
+            </div>
+            
+            <div class="support-content">
+                <div class="contact-info">
+                    <h3>Get In Touch</h3>
+                    <p>Feel free to reach out with questions, suggestions, or to discuss how we can improve our department together.</p>
+                    
+                    <ul class="contact-list">
+                        <li>
+                            <i class="fas fa-phone"></i>
+                            <div>
+                                <strong>Phone</strong><br>
+                                +234 906 736 6196
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <div>
+                                <strong>Email</strong><br>
+                                nugamoses@gmail.com
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fab fa-whatsapp"></i>
+                            <div>
+                                <strong>WhatsApp</strong><br>
+                                +234 906 736 6196
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fab fa-x"></i>
+                            <div>
+                                <strong>X(FKA Twitter)</strong><br>
+                                @mastermind_13
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="support-form">
+                    <h3>Pledge Your Support</h3>
+                    <p>Fill out this form to show your support for my campaign.</p>
+                    
+                    <form id="supportFormElement" action="https://app.proforms.top/f/pr122e67ac" method="POST">
+                        <div class="form-group">
+                            <label for="name">Full Name</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="message">Message of Support (Optional)</label>
+                            <textarea id="message" name="message" placeholder="Share why you're supporting Nuga Moses..."></textarea>
+                        </div>
+                        
+                        <button type="submit" class="submit-btn">Pledge Your Support</button>
+                    </form>
+                    
+                    <div class="confirmation" id="confirmation">
+                        <i class="fas fa-check-circle"></i> Thank you for your support! Your pledge has been recorded.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <h3>Nuga Moses (Mastermind MM)</h3>
+            <p>Candidate for 100lvl Economics Course Representative</p>
+            
+            <div class="social-links">
+                <a href="https://wa.me/qr/XK2GPGG5SIANL1"><i class="fab fa-whatsapp"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="https://x.com/mastermind_13_"><i class="fab fa-x"></i></a>
+                <a href="https://www.facebook.com/share/16UdwCNiH3/"><i class="fab fa-facebook"></i></a>
+            </div>
+            
+            <p>&copy; 2025 Nuga Moses Campaign. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const navMenu = document.getElementById('navMenu');
+            const supportFormElement = document.getElementById('supportFormElement');
+            const confirmation = document.getElementById('confirmation');
+            
+            // Mobile menu toggle
+            mobileMenu.addEventListener('click', function() {
+                navMenu.classList.toggle('show');
+            });
+            
+            // Close mobile menu when clicking on a link
+            const navLinks = document.querySelectorAll('nav a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    navMenu.classList.remove('show');
+                });
+            });
+            
+            // Handle form submission
+            supportFormElement.addEventListener('submit', function(e) {
+                // The form will now submit to the Proforms endpoint
+                // We'll just show a confirmation message
+                
+                // Show loading state
+                const submitBtn = supportFormElement.querySelector('.submit-btn');
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+                submitBtn.disabled = true;
+                
+                // Show confirmation after a short delay
+                setTimeout(function() {
+                    confirmation.style.display = 'block';
+                    
+                    // Hide confirmation after 5 seconds
+                    setTimeout(function() {
+                        confirmation.style.display = 'none';
+                        submitBtn.innerHTML = 'Pledge Your Support';
+                        submitBtn.disabled = false;
+                    }, 5000);
+                }, 1000);
+            });
+            
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
